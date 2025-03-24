@@ -1,22 +1,32 @@
 package com.example.viikko10;
 
-public class MunicipalityData {
-    private int year;
+public class CarData2 {
+    private String type;
+    private int amount;
     private int car1;
     private int pakettiauto;
     private int kuormaAuto;
     private int linjaAuto;
     private int erikoisAuto;
 
-    public MunicipalityData(int y, int c1, int pa, int kA, int lA, int eA) {
-        year = y;
-        car1 = c1;
-        pakettiauto = pa;
-        kuormaAuto = kA;
-        linjaAuto = lA;
-        erikoisAuto = eA;
+    public CarData2(String type, int amount){//, int car1, int pakettiauto, int kuormaAuto, int linjaAuto, int erikoisAuto) {
+        this.type = type;
+        this.amount = amount;
+        /*this.car1 = car1;
+        this.pakettiauto = pakettiauto;
+        this.kuormaAuto = kuormaAuto;
+        this.linjaAuto = linjaAuto;
+        this.erikoisAuto = erikoisAuto;
+        /**/
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
     public int getErikoisAuto() {
         return erikoisAuto;
     }
@@ -49,14 +59,6 @@ public class MunicipalityData {
         this.pakettiauto = pakettiauto;
     }
 
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
-
     public int getCar1() {
         return car1;
     }
@@ -64,5 +66,4 @@ public class MunicipalityData {
     public void setCar1(int car1) {
         this.car1 = car1;
     }
-
 }

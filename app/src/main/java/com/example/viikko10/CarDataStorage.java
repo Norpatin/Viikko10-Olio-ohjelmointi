@@ -6,7 +6,7 @@ public class CarDataStorage {
 
     String city;
     int year;
-    private ArrayList<CarData> carDatas = new ArrayList<>();
+    private ArrayList<CarData> carDatas = new ArrayList<CarData>();
     private static CarDataStorage carDataStorage = null;
 
     private CarDataStorage(){

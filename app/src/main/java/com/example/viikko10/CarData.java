@@ -1,6 +1,7 @@
 package com.example.viikko10;
 
 public class CarData {
+
     private String type;
     private int amount;
     private int car1;
@@ -9,24 +10,21 @@ public class CarData {
     private int linjaAuto;
     private int erikoisAuto;
 
-    public CarData(String type, int amount){//, int car1, int pakettiauto, int kuormaAuto, int linjaAuto, int erikoisAuto) {
+    public CarData(String type, int amount){
         this.type = type;
         this.amount = amount;
-        /*this.car1 = car1;
-        this.pakettiauto = pakettiauto;
-        this.kuormaAuto = kuormaAuto;
-        this.linjaAuto = linjaAuto;
-        this.erikoisAuto = erikoisAuto;
-        /**/
     }
 
-    public String getType() {
-        return type;
+    public CarData(String t, int y, int c1, int pa, int kA, int lA, int eA) {
+        type = t;
+        amount = y;
+        car1 = c1;
+        pakettiauto = pa;
+        kuormaAuto = kA;
+        linjaAuto = lA;
+        erikoisAuto = eA;
     }
 
-    public int getAmount() {
-        return amount;
-    }
     public int getErikoisAuto() {
         return erikoisAuto;
     }
@@ -59,6 +57,22 @@ public class CarData {
         this.pakettiauto = pakettiauto;
     }
 
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public int getCar1() {
         return car1;
     }
@@ -66,4 +80,5 @@ public class CarData {
     public void setCar1(int car1) {
         this.car1 = car1;
     }
+
 }

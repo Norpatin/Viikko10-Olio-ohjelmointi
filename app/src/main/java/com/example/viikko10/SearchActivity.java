@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -64,6 +63,7 @@ public class SearchActivity extends AppCompatActivity {
         Context context = this;
 
         String city = CityName.getText().toString();
+        CarDataStorage.getInstance().setCity(city);
         String yearString = Year.getText().toString();
 
         if (city.isEmpty()){
@@ -89,7 +89,7 @@ public class SearchActivity extends AppCompatActivity {
         service.execute(new Runnable() {
             @Override
             public void run() {
-                ArrayList<MunicipalityData> car1Data = getData(context, city, Year);
+                ArrayList<CarData> car1Data = getData(context, city, Year);
 
                 runOnUiThread(new Runnable() {
                     @Override
@@ -99,12 +99,13 @@ public class SearchActivity extends AppCompatActivity {
                             return;
                         }
 
-                        for(MunicipalityData data : car1Data) {
-                            if(data.getYear() == Year) {
-                                String test = (data.getYear() + " " + data.getCar1() + " " + data.getPakettiauto() + " " + data.getKuormaAuto() + " " + data.getLinjaAuto() + " " + data.getErikoisAuto());
+                        for(CarData data : car1Data) {
+                            if(data.getAmount() == Year) {
+                                String test = (data.getAmount() + " " + data.getCar1() + " " + data.getPakettiauto() + " " + data.getKuormaAuto() + " " + data.getLinjaAuto() + " " + data.getErikoisAuto());
                                 //CityName.setText(test);
                                 Information.setText("Haku onnistui");
-
+                                CarData cd = new CarData(data.getType(), data.getAmount(), data.getCar1(), data.getPakettiauto(), data.getKuormaAuto(), data.getLinjaAuto(), data.getErikoisAuto());
+                                CarDataStorage.getInstance().addCarData(cd);
 
                             }
                         }
@@ -116,7 +117,7 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
-    public ArrayList<MunicipalityData> getData(Context context, String city, int year) {
+    public ArrayList<CarData> getData(Context context, String city, int year) {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode areas = null;
         try {
@@ -177,13 +178,13 @@ public class SearchActivity extends AppCompatActivity {
             JsonNode municipalityData = objectMapper.readTree(response.toString());
 
 
-
             ArrayList<String> years = new ArrayList<>();
             ArrayList<String> car1s = new ArrayList<>();
             ArrayList<String> pakettiautot = new ArrayList<>();
             ArrayList<String> kuormaAutot = new ArrayList<>();
             ArrayList<String> linjaAutot = new ArrayList<>();
             ArrayList<String> erikoisAutot = new ArrayList<>();
+            //ArrayList<String> types = new ArrayList<>();
 
             for (JsonNode node : municipalityData.get("dimension").get("Vuosi").get("category").get("label")) {
                 years.add(node.asText());
@@ -203,9 +204,14 @@ public class SearchActivity extends AppCompatActivity {
             for (JsonNode node : municipalityData.get("value")) {
                 erikoisAutot.add(node.asText());
             }
-             ArrayList<MunicipalityData> car1Data = new ArrayList<>();
+            /*for (JsonNode node : municipalityData.get("value")) {
+                types.add(node.asText());
+            }
+            /**/
+             ArrayList<CarData> car1Data = new ArrayList<>();
+            String type = CityName.getText().toString();
              for(int i = 0; i < years.size(); i++) {
-                 car1Data.add(new MunicipalityData(Integer.valueOf(years.get(i)), Integer.valueOf(car1s.get(i)),Integer.valueOf(pakettiautot.get(i+14)),
+                 car1Data.add(new CarData(type, Integer.valueOf(years.get(i)), Integer.valueOf(car1s.get(i)),Integer.valueOf(pakettiautot.get(i+14)),
                          Integer.valueOf(kuormaAutot.get(i+(14*2))), Integer.valueOf(linjaAutot.get(i+(14*3))), Integer.valueOf(erikoisAutot.get(i+(14*4)))));
              }
 
