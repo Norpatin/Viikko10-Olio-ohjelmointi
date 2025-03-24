@@ -63,10 +63,8 @@ public class SearchActivity extends AppCompatActivity {
         Context context = this;
 
         String city = CityName.getText().toString();
-
+        CarDataStorage.getInstance().setCity(city);
         String yearString = Year.getText().toString();
-        int IntYear = Integer.parseInt(yearString); // uusi
-
 
         if (city.isEmpty()){
             Information.setText("Haku epäonnistui, kaupunkia ei olemassa tai se on kirjoitettu väärin.");
@@ -86,8 +84,6 @@ public class SearchActivity extends AppCompatActivity {
         }
 
         ExecutorService service = Executors.newSingleThreadExecutor();
-        CarDataStorage.getInstance().setCity(city); //uusi
-        CarDataStorage.getInstance().setYear(IntYear); //uusi
 
         int Year = year;
         service.execute(new Runnable() {
@@ -105,12 +101,12 @@ public class SearchActivity extends AppCompatActivity {
 
                         for(CarData data : car1Data) {
                             if(data.getAmount() == Year) {
-                                //data.setType(CarDataStorage);
                                 String test = (data.getAmount() + " " + data.getCar1() + " " + data.getPakettiauto() + " " + data.getKuormaAuto() + " " + data.getLinjaAuto() + " " + data.getErikoisAuto());
                                 //CityName.setText(test);
                                 Information.setText("Haku onnistui");
                                 CarData cd = new CarData(data.getType(), data.getAmount(), data.getCar1(), data.getPakettiauto(), data.getKuormaAuto(), data.getLinjaAuto(), data.getErikoisAuto());
                                 CarDataStorage.getInstance().addCarData(cd);
+
                             }
                         }
                     }
@@ -212,24 +208,24 @@ public class SearchActivity extends AppCompatActivity {
                 types.add(node.asText());
             }
             /**/
-             ArrayList<CarData> car1Data = new ArrayList<>();
+            ArrayList<CarData> car1Data = new ArrayList<>();
             String type = CityName.getText().toString();
-             for(int i = 0; i < years.size(); i++) {
-                 car1Data.add(new CarData(type, Integer.valueOf(years.get(i)), Integer.valueOf(car1s.get(i)),Integer.valueOf(pakettiautot.get(i+14)),
-                         Integer.valueOf(kuormaAutot.get(i+(14*2))), Integer.valueOf(linjaAutot.get(i+(14*3))), Integer.valueOf(erikoisAutot.get(i+(14*4)))));
-             }
+            for(int i = 0; i < years.size(); i++) {
+                car1Data.add(new CarData(type, Integer.valueOf(years.get(i)), Integer.valueOf(car1s.get(i)),Integer.valueOf(pakettiautot.get(i+14)),
+                        Integer.valueOf(kuormaAutot.get(i+(14*2))), Integer.valueOf(linjaAutot.get(i+(14*3))), Integer.valueOf(erikoisAutot.get(i+(14*4)))));
+            }
 
             return car1Data;
 
 
-            } catch (MalformedURLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        return null;
+        } catch (MalformedURLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
+        return null;
+    }
 
 }

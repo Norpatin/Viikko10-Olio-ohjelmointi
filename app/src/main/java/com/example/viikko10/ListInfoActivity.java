@@ -51,28 +51,30 @@ public class ListInfoActivity extends AppCompatActivity {
         StringBuilder TextCity = new StringBuilder();
         StringBuilder dataYearText = new StringBuilder();
 
-        int vuosi = CarDataStorage.getInstance().getYear();
-        String paikka = CarDataStorage.getInstance().getCity();
-
         for (CarData data : carData) {
             //if(data.getType() == getCity()){//CarDataStorage.getInstance().getCity()) {
-                int yhteensa = data.getCar1() + data.getPakettiauto() + data.getKuormaAuto() + data.getLinjaAuto() + data.getErikoisAuto();
-                dataText.append("Henkilöautot: ").append(data.getCar1()).append("\n").append("Pakettiautot: ").append(data.getPakettiauto()).append("\n").append("Kuoma-autot: ").
-                        append(data.getKuormaAuto()).append("\n").append("Linja-autot: ").append(data.getLinjaAuto()).append("\n").append("Erikoisautot: ").append("\n").
-                        append(data.getErikoisAuto()).append("\n").append("\n").append("Yhteensä: ").append(yhteensa);
-                TextCity.append(data.getType());
-                dataYearText.append(data.getAmount());
-
+            int yhteensa = data.getCar1() + data.getPakettiauto() + data.getKuormaAuto() + data.getLinjaAuto() + data.getErikoisAuto();
+            dataText.append("Henkilöautot: ").append(data.getCar1()).append("\n").append("Pakettiautot: ").append(data.getPakettiauto()).append("\n").append("Kuoma-autot: ").
+                    append(data.getKuormaAuto()).append("\n").append("Linja-autot: ").append(data.getLinjaAuto()).append("\n").append("Erikoisautot: ").append("\n").
+                    append(data.getErikoisAuto()).append("\n").append("\n").append("Yhteensä: ").append(yhteensa);
+            TextCity.append(data.getType());
+            dataYearText.append(data.getAmount());
 
             //}
         }
 
-            carInfo.setText(dataText);
-            //cityText.setText(TextCity.toString());
-            cityText.setText(paikka.toString());
-            //yearText.setText(dataYearText.toString());
-            yearText.setText(vuosi);
+        carInfo.setText(dataText);
+        cityText.setText(TextCity.toString());
+        yearText.setText(dataYearText.toString());
 
+    }
+
+    public void setCity(String city){
+        city = this.city;
+    }
+
+    public String getCity(){
+        return city;
     }
 
     public void SwitchToMainActivity(View view){
