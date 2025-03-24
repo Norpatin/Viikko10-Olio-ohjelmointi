@@ -62,6 +62,8 @@ public class SearchActivity extends AppCompatActivity {
         Log.d("Lut", "Nappula toimii");
         Context context = this;
 
+        CarDataStorage.getInstance().clearData();
+
         String city = CityName.getText().toString();
         //CarDataStorage.getInstance().setCity(city);
         String yearString = Year.getText().toString();
