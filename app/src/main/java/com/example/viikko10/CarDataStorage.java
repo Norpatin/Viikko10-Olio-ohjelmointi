@@ -31,7 +31,9 @@ public class CarDataStorage {
         this.year = year;
     }
 
-    public void clearData() {/*Code here*/}
+    public void clearData() {
+
+    }
 
     public String getCity() {
         return city;
@@ -45,3 +47,4 @@ public class CarDataStorage {
         carDatas.add(carData);
     }
 }
+
