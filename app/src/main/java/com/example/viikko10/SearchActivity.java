@@ -1,9 +1,12 @@
 package com.example.viikko10;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,10 +14,30 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import javax.net.ssl.HttpsURLConnection;
+
 public class SearchActivity extends AppCompatActivity {
 
     private EditText CityName;
     private EditText Year;
+    private TextView Information;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +51,176 @@ public class SearchActivity extends AppCompatActivity {
         });
         CityName = findViewById(R.id.CityNameEdit);
         Year = findViewById(R.id.YearEdit);
+        Information = findViewById(R.id.StatusText);
     }
 
     public void SwitchToListInfoActivity(View view){
         Intent intent = new Intent(this, ListInfoActivity.class);
         startActivity(intent);
     }
+
+    public void onFindBtnClick(View view) {
+        Log.d("Lut", "Nappula toimii");
+        Context context = this;
+
+        //MunicipalityDataRetriever mr = new MunicipalityDataRetriever();
+
+        ExecutorService service = Executors.newSingleThreadExecutor();
+
+        service.execute(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<MunicipalityData> car1Data = getData(context, "Lahti", 2020);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int IntegerAskYear = 2020;
+                        for(MunicipalityData data : car1Data) {
+                            if(data.getYear() == IntegerAskYear) {
+                                String test = (data.getYear() + " " + data.getCar1() + " " + data.getPakettiauto() + " " + data.getKuormaAuto() + " " + data.getLinjaAuto() + " " + data.getErikoisAuto());
+                                CityName.setText(test);
+                            }
+
+                        }
+
+                        //StringBuilder sb = new StringBuilder();
+                        //int testYear = 2020;
+                        //String s = "";
+                        //for(MunicipalityData data : car1Data) {
+                            //String YearString = Year.getText().toString();
+                            //if(data.getYear() == testYear) {
+                                //s = data.getYear() + " " + data.getPakettiauto();
+                                /*sb.append("Vuosi: ").append(data.getYear()).append("\n")
+                                .append("Henkilöautot: ").append(data.getCar1()).append("\n")
+                                .append("Pakettiautot: ").append(data.getPakettiauto()).append("\n")
+                                .append("Kuorma-autot: ").append(data.getKuormaAuto()).append("\n")
+                                .append("Linja-autot: ").append(data.getLinjaAuto()).append("\n")
+                                .append("Erikoisautot: ").append(data.getErikoisAuto()).append("\n\n");
+                                /**/
+
+                            //}
+                            //s = s + data.getYear() + data.getCar1() + data.getPakettiauto() + data.getKuormaAuto() + data.getLinjaAuto() + data.getErikoisAuto();
+                        //}
+                        //if (sb.length() > 0) {
+                            //CityName.setText(sb.toString());
+
+                        }
+                        //CityName.setText(s);
+
+                    //}
+                });
+
+                Log.d("LUT2", "Data haettu");
+            }
+        });
+
+    }
+
+    public ArrayList<MunicipalityData> getData(Context context, String city, int year) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode areas = null;
+        try {
+            areas = objectMapper.readTree(new URL("https://pxdata.stat.fi/PxWeb/api/v1/fi/StatFin/mkan/statfin_mkan_pxt_11ic.px"));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        ArrayList<String> keys = new ArrayList<>();
+        ArrayList <String> values = new ArrayList<>();
+
+        for (JsonNode node : areas.get("variables").get(0).get("values")) {
+            values.add(node.asText());
+        }
+
+        for (JsonNode node : areas.get("variables").get(0).get("valueTexts")) {
+            keys.add(node.asText());
+        }
+
+        HashMap<String, String> municipalityCodes = new HashMap<>();
+
+        for(int i = 0; i < keys.size(); i++) {
+            municipalityCodes.put(keys.get(i), values.get(i));
+        }
+
+        String municipality = "";
+        String code = null;
+        code = municipalityCodes.get(municipality);
+
+
+        try {
+            URL url = new URL("https://pxdata.stat.fi:443/PxWeb/api/v1/fi/StatFin/mkan/statfin_mkan_pxt_11ic.px");
+
+            HttpURLConnection con = (HttpsURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json; utf-8");
+            con.setRequestProperty("Accept", "application/json");
+            con.setDoOutput(true);
+
+            JsonNode jsonInputString = objectMapper.readTree(context.getResources().openRawResource(R.raw.query));
+
+            ((ObjectNode) jsonInputString.get("query").get(0).get("selection")).putArray("values").add(code);
+
+            byte[] input = objectMapper.writeValueAsBytes(jsonInputString);
+            OutputStream os = con.getOutputStream();
+            os.write(input, 0, input.length);
+            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
+            StringBuilder response = new StringBuilder();
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                response.append(line.trim());
+            }
+            JsonNode municipalityData = objectMapper.readTree(response.toString());
+
+
+
+            ArrayList<String> years = new ArrayList<>();
+            ArrayList<String> car1s = new ArrayList<>();
+            ArrayList<String> pakettiautot = new ArrayList<>();
+            ArrayList<String> kuormaAutot = new ArrayList<>();
+            ArrayList<String> linjaAutot = new ArrayList<>();
+            ArrayList<String> erikoisAutot = new ArrayList<>();
+
+            for (JsonNode node : municipalityData.get("dimension").get("Vuosi").get("category").get("label")) {
+                years.add(node.asText());
+            }
+            for (JsonNode node : municipalityData.get("value")) {
+                car1s.add(node.asText());
+            }
+            for (JsonNode node : municipalityData.get("value")) {
+                pakettiautot.add(node.asText());
+            }
+            for (JsonNode node : municipalityData.get("value")) {
+                kuormaAutot.add(node.asText());
+            }
+            for (JsonNode node : municipalityData.get("value")) {
+                linjaAutot.add(node.asText());
+            }
+            for (JsonNode node : municipalityData.get("value")) {
+                erikoisAutot.add(node.asText());
+            }
+             ArrayList<MunicipalityData> car1Data = new ArrayList<>();
+             for(int i = 0; i < years.size(); i++) {
+                 car1Data.add(new MunicipalityData(Integer.valueOf(years.get(i)), Integer.valueOf(car1s.get(i)),Integer.valueOf(pakettiautot.get(i+14)),
+                         Integer.valueOf(kuormaAutot.get(i+(14*2))), Integer.valueOf(linjaAutot.get(i+(14*3))), Integer.valueOf(erikoisAutot.get(i+(14*4)))));
+             }
+
+            return car1Data;
+
+
+            } catch (MalformedURLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        return null;
+        }
+
 
 }
