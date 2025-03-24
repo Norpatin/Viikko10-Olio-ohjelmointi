@@ -60,8 +60,8 @@ public class ListInfoActivity extends AppCompatActivity {
                 dataText.append("Henkilöautot: ").append(data.getCar1()).append("\n").append("Pakettiautot: ").append(data.getPakettiauto()).append("\n").append("Kuoma-autot: ").
                         append(data.getKuormaAuto()).append("\n").append("Linja-autot: ").append(data.getLinjaAuto()).append("\n").append("Erikoisautot: ").append("\n").
                         append(data.getErikoisAuto()).append("\n").append("\n").append("Yhteensä: ").append(yhteensa);
-                //TextCity.append(data.getType());
-                //dataYearText.append(data.getAmount());
+                TextCity.append(data.getType());
+                dataYearText.append(data.getAmount());
 
 
             //}
@@ -69,7 +69,7 @@ public class ListInfoActivity extends AppCompatActivity {
 
             carInfo.setText(dataText);
             //cityText.setText(TextCity.toString());
-            cityText.setText(paikka);
+            cityText.setText(paikka.toString());
             //yearText.setText(dataYearText.toString());
             yearText.setText(vuosi);
 
