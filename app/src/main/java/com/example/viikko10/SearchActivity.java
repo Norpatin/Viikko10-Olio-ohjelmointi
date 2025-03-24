@@ -63,54 +63,53 @@ public class SearchActivity extends AppCompatActivity {
         Log.d("Lut", "Nappula toimii");
         Context context = this;
 
-        //MunicipalityDataRetriever mr = new MunicipalityDataRetriever();
+        String city = CityName.getText().toString();
+        String yearString = Year.getText().toString();
+
+        if (city.isEmpty()){
+            Information.setText("Haku epäonnistui, kaupunkia ei olemassa tai se on kirjoitettu väärin.");
+            return;
+        }
+
+        if (yearString.isEmpty()) {
+            Information.setText("Haku epäonnistui, vuotta ei olemassa tai se on kirjoitettu väärin.");
+            return;
+        }
+
+        int year = 0;
+        try {
+            year = Integer.parseInt(yearString);
+        } catch (NumberFormatException e) {
+            Information.setText("Et antaunut oikeaa vuosilukua.");
+        }
 
         ExecutorService service = Executors.newSingleThreadExecutor();
 
+        int Year = year;
         service.execute(new Runnable() {
             @Override
             public void run() {
-                ArrayList<MunicipalityData> car1Data = getData(context, "Lahti", 2020);
+                ArrayList<MunicipalityData> car1Data = getData(context, city, Year);
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        int IntegerAskYear = 2020;
+                        if (car1Data == null || car1Data.isEmpty()){
+                            Information.setText("Haku epäonnistui, kaupunkia ei olemassa tai se on kirjoitettu väärin.");
+                            return;
+                        }
+
                         for(MunicipalityData data : car1Data) {
-                            if(data.getYear() == IntegerAskYear) {
+                            if(data.getYear() == Year) {
                                 String test = (data.getYear() + " " + data.getCar1() + " " + data.getPakettiauto() + " " + data.getKuormaAuto() + " " + data.getLinjaAuto() + " " + data.getErikoisAuto());
-                                CityName.setText(test);
+                                //CityName.setText(test);
+                                Information.setText("Haku onnistui");
+
+
                             }
-
                         }
-
-                        //StringBuilder sb = new StringBuilder();
-                        //int testYear = 2020;
-                        //String s = "";
-                        //for(MunicipalityData data : car1Data) {
-                            //String YearString = Year.getText().toString();
-                            //if(data.getYear() == testYear) {
-                                //s = data.getYear() + " " + data.getPakettiauto();
-                                /*sb.append("Vuosi: ").append(data.getYear()).append("\n")
-                                .append("Henkilöautot: ").append(data.getCar1()).append("\n")
-                                .append("Pakettiautot: ").append(data.getPakettiauto()).append("\n")
-                                .append("Kuorma-autot: ").append(data.getKuormaAuto()).append("\n")
-                                .append("Linja-autot: ").append(data.getLinjaAuto()).append("\n")
-                                .append("Erikoisautot: ").append(data.getErikoisAuto()).append("\n\n");
-                                /**/
-
-                            //}
-                            //s = s + data.getYear() + data.getCar1() + data.getPakettiauto() + data.getKuormaAuto() + data.getLinjaAuto() + data.getErikoisAuto();
-                        //}
-                        //if (sb.length() > 0) {
-                            //CityName.setText(sb.toString());
-
-                        }
-                        //CityName.setText(s);
-
-                    //}
+                    }
                 });
-
                 Log.d("LUT2", "Data haettu");
             }
         });
@@ -147,9 +146,10 @@ public class SearchActivity extends AppCompatActivity {
             municipalityCodes.put(keys.get(i), values.get(i));
         }
 
-        String municipality = "";
-        String code = null;
-        code = municipalityCodes.get(municipality);
+        //String municipality = "";
+        //String code = null;
+        //String code = municipalityCodes.get(municipality);
+        String code = municipalityCodes.get(city);
 
 
         try {
@@ -221,6 +221,5 @@ public class SearchActivity extends AppCompatActivity {
             }
         return null;
         }
-
 
 }
