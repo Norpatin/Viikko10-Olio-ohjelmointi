@@ -51,6 +51,10 @@ public class ListInfoActivity extends AppCompatActivity {
         StringBuilder TextCity = new StringBuilder();
         StringBuilder dataYearText = new StringBuilder();
 
+        int vuosi = CarDataStorage.getInstance().getYear();
+        String vuosiString = String.valueOf(vuosi);
+        String paikka = CarDataStorage.getInstance().getCity();
+
         for (CarData data : carData) {
             //if(data.getType() == getCity()){//CarDataStorage.getInstance().getCity()) {
             int yhteensa = data.getCar() + data.getPakettiauto() + data.getKuormaAuto() + data.getLinjaAuto() + data.getErikoisAuto();
@@ -64,8 +68,10 @@ public class ListInfoActivity extends AppCompatActivity {
         }
 
         carInfo.setText(dataText);
-        cityText.setText(TextCity.toString());
-        yearText.setText(dataYearText.toString());
+        //cityText.setText(TextCity.toString());
+        cityText.setText(paikka);
+        //yearText.setText(dataYearText.toString());
+        yearText.setText(vuosiString);
 
     }
 

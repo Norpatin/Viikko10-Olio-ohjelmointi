@@ -63,7 +63,7 @@ public class SearchActivity extends AppCompatActivity {
         Context context = this;
 
         String city = CityName.getText().toString();
-        CarDataStorage.getInstance().setCity(city);
+        //CarDataStorage.getInstance().setCity(city);
         String yearString = Year.getText().toString();
 
         if (city.isEmpty()){
@@ -84,6 +84,9 @@ public class SearchActivity extends AppCompatActivity {
         }
 
         ExecutorService service = Executors.newSingleThreadExecutor();
+        CarDataStorage.getInstance().setCity(city); //uusi
+        int IntYear = Integer.parseInt(yearString); // uusi
+        CarDataStorage.getInstance().setYear(IntYear); //uusi
 
         int Year = year;
         service.execute(new Runnable() {
