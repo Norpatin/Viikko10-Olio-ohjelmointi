@@ -101,10 +101,10 @@ public class SearchActivity extends AppCompatActivity {
 
                         for(CarData data : car1Data) {
                             if(data.getAmount() == Year) {
-                                String test = (data.getAmount() + " " + data.getCar1() + " " + data.getPakettiauto() + " " + data.getKuormaAuto() + " " + data.getLinjaAuto() + " " + data.getErikoisAuto());
+                                String test = (data.getAmount() + " " + data.getCar() + " " + data.getPakettiauto() + " " + data.getKuormaAuto() + " " + data.getLinjaAuto() + " " + data.getErikoisAuto());
                                 //CityName.setText(test);
                                 Information.setText("Haku onnistui");
-                                CarData cd = new CarData(data.getType(), data.getAmount(), data.getCar1(), data.getPakettiauto(), data.getKuormaAuto(), data.getLinjaAuto(), data.getErikoisAuto());
+                                CarData cd = new CarData(data.getType(), data.getAmount(), data.getCar(), data.getPakettiauto(), data.getKuormaAuto(), data.getLinjaAuto(), data.getErikoisAuto());
                                 CarDataStorage.getInstance().addCarData(cd);
 
                             }

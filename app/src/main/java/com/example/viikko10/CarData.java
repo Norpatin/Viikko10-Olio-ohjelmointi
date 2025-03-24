@@ -73,11 +73,11 @@ public class CarData {
         this.type = type;
     }
 
-    public int getCar1() {
+    public int getCar() {
         return car1;
     }
 
-    public void setCar1(int car1) {
+    public void setCar(int car1) {
         this.car1 = car1;
     }
 

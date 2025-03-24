@@ -53,8 +53,8 @@ public class ListInfoActivity extends AppCompatActivity {
 
         for (CarData data : carData) {
             //if(data.getType() == getCity()){//CarDataStorage.getInstance().getCity()) {
-            int yhteensa = data.getCar1() + data.getPakettiauto() + data.getKuormaAuto() + data.getLinjaAuto() + data.getErikoisAuto();
-            dataText.append("Henkilöautot: ").append(data.getCar1()).append("\n").append("Pakettiautot: ").append(data.getPakettiauto()).append("\n").append("Kuoma-autot: ").
+            int yhteensa = data.getCar() + data.getPakettiauto() + data.getKuormaAuto() + data.getLinjaAuto() + data.getErikoisAuto();
+            dataText.append("Henkilöautot: ").append(data.getCar()).append("\n").append("Pakettiautot: ").append(data.getPakettiauto()).append("\n").append("Kuoma-autot: ").
                     append(data.getKuormaAuto()).append("\n").append("Linja-autot: ").append(data.getLinjaAuto()).append("\n").append("Erikoisautot: ").append("\n").
                     append(data.getErikoisAuto()).append("\n").append("\n").append("Yhteensä: ").append(yhteensa);
             TextCity.append(data.getType());
